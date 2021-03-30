@@ -3,8 +3,11 @@ const app = express();
 const ejs = require('ejs');
 const router = require("../router/router");
 const bodyParser = require('body-parser');
+const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.urlencoded());
+app.use(cookieParser());
 app.use(router);
 app.use(express.static('./src/images'));
 app.use(express.static('./src/css'));

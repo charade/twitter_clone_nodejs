@@ -8,15 +8,15 @@ const controller = require ('../controller/controller');
 router.get('/',(req,res)=>{
    res.sendFile(path.join( __dirname, '../html/login.html'));
 })
-/////page login
+///page login
 router.get('/signup',(req,res)=>{
     res.sendFile(path.join( __dirname, '../html/signup.html'));
 })
-/////espace personnel
+///espace personnel
 router.get('/home', (req,res)=>{
     res.sendFile(path.join(__dirname, '../html/index.html'));
 })
-router.get('/profile', (req,res)=>{
+router.get('/username', (req,res)=>{
     res.sendFile(path.join(__dirname, '../html/profile.html'));
 })
 
@@ -27,7 +27,7 @@ router.get('/logout', (req,res)=>{
 router.post('/signup', controller.newUser);
 ///page inscrption utilisateur
 // router.post('/register',controller.function);
-
+router.post('/login', controller.login);
 
 
 module.exports = router;
