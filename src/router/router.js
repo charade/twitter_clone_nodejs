@@ -27,7 +27,8 @@ router.get('/logout', (req,res)=>{
 router.post('/signup', controller.newUser);
 ///page inscrption utilisateur
 // router.post('/register',controller.function);
-router.post('/login', controller.login);
+router.post('/login', controller.getUsername, controller.login);
+
 
 
 module.exports = router;

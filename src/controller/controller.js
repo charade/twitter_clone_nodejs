@@ -10,7 +10,7 @@ exports.newUser = async(req,res)=>{
     const{last_name, first_name, birthday, email, password, telephone, username, city} = req.body;
 
     
-    const MAX_AGE = new Date( Date.now() + 3600); ////duree de vie de de 3min;
+    const MAX_AGE =  Date.now()/1000 + 3600; ////duree de vie de de 3min;
     try{
         ///hashage renouveller chaque fois pour le même mot de pass
         const hash = await bcrypt.hash(password,10);
@@ -28,7 +28,7 @@ exports.newUser = async(req,res)=>{
         const SECRET_KEY = "azerty"
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
-        const cookie = res.cookie("auth", token, {maxAge: MAX_AGE});
+        const cookie = res.cookie(username, token, {maxAge: MAX_AGE});
         // requête ajout de l'utilisateur dans la database
         model.createUser(req.body,(err,response)=>{
             if(err){
@@ -63,4 +63,17 @@ exports.login = (req, res) => {
             res.send("Invalid Password !");
             } 
     })
+}
+
+exports.createTweet = (req, res) =>{
+    if (req.cookie.username){
+
+    }
+}
+
+exports.getUsername = (request, response, next) =>{
+
+    const user = "";
+    next();
+    user = request.body.username;
 }

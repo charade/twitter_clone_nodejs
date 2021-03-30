@@ -29,6 +29,20 @@ exports.userLogin = (username, callback) => {
             }
             callback(null,status_ok);
             
-        })
+        });
 }
 
+exports.userName = async (username, text, callback) =>{
+    
+    try {
+        const response = await db.query(`SELECT id FROM users WHERE pseudo="${username}";`)
+        const id = await response[0].id;
+        const responseTweet = await db.query(`INSERT INTO tweets (author_id, text) VALUES (${id}, "${text}");`)
+        callback(null, responseTweet)
+    } 
+
+    catch (err){
+        callback(err, null)
+    }
+    
+}
