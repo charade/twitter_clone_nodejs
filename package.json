@@ -1,0 +1,26 @@
+{
+  "name": "twitter-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/server/server.js",
+  "scripts": {
+    "start": "node ./src/server/server.js",
+    "watch": "nodemon ./src/server/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

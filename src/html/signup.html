@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/iconTwitter.png">
+</head>
+
+<body>
+
+  <div class="home">
+    <img class="home-image" src="/logoTwitter.png" alt="logoTwitter">
+    <h1 class="home-title">Create your account</h1>
+  </div>
+
+  <form class="form" action="/signup" method="post">
+    <div class="form-input">
+      <label for="first_name">First Name</label>
+      <input type="text" name="first_name" id="first_name" required>
+    </div>
+    <div class="form-input">
+      <label for="last_name">Last Name</label>
+      <input type="text" name="last_name" id="last_name" required>
+    </div>
+
+    <div class="form-input">
+      <label for="">Birthday date</label>
+      <input type="date" name="birthday" id="birthday" required>
+    </div>
+
+    <div class="form-input">
+      <label for="city">City</label>
+      <input type="text" name="city" id="city">
+    </div>
+
+    <div class="form-input">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" required>
+    </div>
+
+    <div class="form-input">
+      <label for="telephone">Phone</label>
+      <input type="tel" name="telephone" id="telephone" pattern="[0-9]{10}" maxlength="10" minlength="10">
+    </div>
+
+    <div class="form-input">
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" required>
+    </div>
+
+    <div class="form-input">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+
+    <div class="form-input">
+      <label for="picture">Picture</label>
+      <input type="url" name="picture" id="picture" required>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+
+</html>
