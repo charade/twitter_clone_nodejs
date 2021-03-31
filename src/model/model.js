@@ -32,17 +32,18 @@ exports.userLogin = (username, callback) => {
         });
 }
 
-exports.userName = async (username, text, callback) =>{
-    
-    try {
-        const response = await db.query(`SELECT id FROM users WHERE pseudo="${username}";`)
-        const id = await response[0].id;
-        const responseTweet = await db.query(`INSERT INTO tweets (author_id, text) VALUES (${id}, "${text}");`)
-        callback(null, responseTweet)
-    } 
+exports.getUserID = (username, callback) =>{
+    db.query(`SELECT id FROM users WHERE pseudo = "${username}";`,(err,response)=>{
+        if(err) return callback(err,null);
+        callback(null,response);
+    }) 
+}
 
-    catch (err){
-        callback(err, null)
-    }
-    
+exports.createTweet = (id,text,callback) =>{
+    db.query(`INSERT INTO tweets(author_id, text) VALUES(${id},"${text}");`,(err,response)=>{
+        if(err){
+            callback(err,null);
+        }
+        callback(null,response);
+    }) 
 }

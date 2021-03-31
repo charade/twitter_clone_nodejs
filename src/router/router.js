@@ -5,10 +5,14 @@ const path = require("path");
 
 const controller = require ('../controller/controller');
 
-router.get('/',(req,res)=>{
+//user can create  tweet
+router.post('/tweet', controller.addTweet);
+
+///login page est à la racine
+router.get('/',controller.logout,(req,res)=>{
    res.sendFile(path.join( __dirname, '../html/login.html'));
 })
-///page login
+///page signup
 router.get('/signup',(req,res)=>{
     res.sendFile(path.join( __dirname, '../html/signup.html'));
 })
@@ -20,16 +24,17 @@ router.get('/username', (req,res)=>{
     res.sendFile(path.join(__dirname, '../html/profile.html'));
 })
 
-router.get('/logout', (req,res)=>{
-    res.redirect('/home');
-})
+// //le logout supprime le cookie d'authentification
+// router.get('/',controller.logout, (req,res)=>{
+//     res.redirect('/home');
+// })
 
+
+// signup + authentification
 router.post('/signup', controller.newUser);
-///page inscrption utilisateur
-// router.post('/register',controller.function);
-router.post('/login', controller.getUsername, controller.login);
 
-
+// login + authentification
+router.post('/login', controller.authentication, controller.login);
 
 module.exports = router;
 

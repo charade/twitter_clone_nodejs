@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(router);
 app.use(express.static('./src/images'));
