@@ -23,7 +23,6 @@ app.get('/register');
 app.listen(2000,()=>console.log('server on'));
 
 
-////////////////////////////afficher 20 tweets/////////////////////////////
 
 
 

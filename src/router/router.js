@@ -21,7 +21,10 @@ router.get('/signup',(req,res)=>{
 router.get('/home', controller.displayTweets);
     
 ////////espace personnel avec tous les tweets de l'utilisateur///////////////
-router.get('/username', controller.allUserTweets);
+router.get('/username', controller.allUserTweets, controller.noTweetsView);
+
+///////////supprimer les tweets/////////////////
+router.get('/delete/:id', controller.deleteUserTweets);
 
 
 

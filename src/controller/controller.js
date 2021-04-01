@@ -94,33 +94,34 @@ exports.addTweet = (req, res) =>{
 //middleware to authenticate user when browsing
 exports.authentication=(req,res,next)=>{
     
-    next();
     //date d'expiration du cookie 
-
+    
     const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
-
+    
     const{username} = req.body;
-
+    
     model.getUserID(username,(err,ID)=>{
         if(err){
             res.send(err.message);
         } 
-    
-
+        
+        
         const user = {
-                USER_ID : ID[0].id,
-                expiration: EXPIRATION_DATE
-            }
-
+            username : username,
+            USER_ID : ID[0].id,
+            expiration: EXPIRATION_DATE,
+            city: ID[0].city
+        }
+        
         const SECRET_KEY = "azerty"
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
         res.cookie("authentication", token, {expires: EXPIRATION_DATE});
+        next();
+        
         
     })
-   
-     ////duree de vie  de 3min;
-        ///crération du token
+    
 }
 
 exports.logout = (req,res, next)=>{
@@ -142,8 +143,9 @@ exports.displayTweets = (req, res) =>{
 }
 
 
- exports.allUserTweets = async (req, res) =>{
+ exports.allUserTweets = async (req, res , next) =>{
     
+
     const token = req.cookies.authentication; //coresponding to token saved on login or signup
     try{
         const SECRET_KEY = "azerty"
@@ -151,19 +153,54 @@ exports.displayTweets = (req, res) =>{
         const userId = isAuthentic.USER_ID;
         console.log(isAuthentic);
 
+
         //////reponse de la requete..../////////////////
         model.userTweets(userId, (err,response) => {
             if(err){
                 console.log("quelques chose");
+
             }
-            res.render("profile.ejs",{response} );
-            console.log(response);
+           if(response.length > 0){
+
+               res.render("profile.ejs",{response} );
+               console.log(response);
+           } 
+           else 
+               next();
         })
     }
     catch (error) {
         res.send("veuilez vous connecter");
     }
 }
+
+exports.deleteUserTweets =  (req, res) =>{
+    const id = req.params.id;
+
+    model.deleteTweet( id, (err, resp)=>{
+        if(err){
+            res.send(err.message);
+        }
+        res.redirect("/username");
+    })
+}
+
+exports.noTweetsView = async (req, res) => {
+    const token = req.cookies.authentication; //coresponding to token saved on login or signup
+    try{
+        const SECRET_KEY = "azerty"
+        const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
+        res.render("profileNoTweetView.ejs", {isAuthentic} )
+        
+        }
+    catch (error){
+        res.send("nous rencontrons quelques difficultés")
+    }
+
+
+}
+
+
 
 
 

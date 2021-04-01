@@ -43,6 +43,7 @@
       <div class="tweet-container-title">
         <h3><%=response[0].pseudo%></h3>
       </div>
+      
       <div class="tweet-container-profile">
         <div class="tweet-container-profile-background">
           <img src="" alt="">
@@ -51,12 +52,14 @@
           <img src="" alt="">
         </div>
         <div class="tweet-container-profile-infos">
-          <h3><%=response[0].pseudo%></h3>
-          <h4>@<%=response[0].pseudo%></h4>
-          <p><%=response[0].city%></p>
+          <h3><%=  response[0].pseudo %></h3>
+          <h4>@<%= response[0].pseudo %></h4>
+          <p><%= response[0].city%></p>
+          
+          
         </div>
       </div>
-
+      
       <div class="comments">
         <% response.forEach(user => { %>
         <div class="comments-comment">
@@ -64,11 +67,31 @@
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">
               <a href="/username">
-                <h3 class="comments-comment-content-username"><%=user.pseudo%></h3>
+                <h3 class="comments-comment-content-username"><%= user.pseudo%></h3>
               </a>
               <span class="comments-comment-content-date"><%=user.creation_date%></span>
             </div>
             <p class="comments-comment-content-text"><%=user.text%></p>
+            <a class="delete" href= <%=`/delete/${user.id}`%>>
+              <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 365.744 365.744" style="enable-background:new 0 0 365.744 365.744;" fill='rgb(30,144,255)' xml:space="preserve" width="18px" height="18px">
+                <g>
+                    <g>
+                        <g>
+                            <path d="M88.309,339.074c1.64,15.621,15.131,27.282,30.825,26.645H250.79c15.981,0.636,29.705-11.258,31.347-27.167
+                                l21.42-223.608H62.186L88.309,339.074z"/>
+                            <path d="M342.742,47.026h-97.176V30.307c0.58-16.148-12.041-29.708-28.188-30.288c-0.53-0.019-1.061-0.024-1.591-0.014h-65.829
+                                c-16.156-0.299-29.494,12.555-29.793,28.711c-0.01,0.53-0.005,1.061,0.014,1.591v16.718H23.003
+                                c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h319.739c5.771,0,10.449-4.678,10.449-10.449
+                                S348.512,47.026,342.742,47.026z M224.668,30.307v16.718h-83.592V30.307c-0.589-4.579,2.646-8.768,7.225-9.357
+                                c0.549-0.071,1.104-0.086,1.656-0.047h65.829c4.605-0.326,8.603,3.143,8.929,7.748C224.755,29.203,224.739,29.758,224.668,30.307
+                                z"/>
+                        </g>
+                    </g>
+                </g>
+        
+              </svg>
+            </a>
+        
           </div>
         </div>
         <%})%>
