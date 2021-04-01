@@ -47,3 +47,16 @@ exports.createTweet = (id,text,callback) =>{
         callback(null,response);
     }) 
 }
+
+
+exports.tweetDisplay = (callback) =>{
+    db.query(`select users.pseudo,tweets.text,tweets.creation_date from tweets  inner join users on tweets.author_id = users.id   ORDER BY tweets.id DESC LIMIT 20;`
+     , (err,response) =>{
+        if (err) {
+            callback(err, null);
+            return;
+        }
+        callback(null,response);
+    })
+
+}

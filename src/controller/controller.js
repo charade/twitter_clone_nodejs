@@ -2,6 +2,8 @@ const model = require("../model/model");
 const cookie = require("cookie-parser");
 const jwt = require ("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const e = require("express");
+const { render } = require("ejs");
 
 
 
@@ -10,8 +12,7 @@ exports.newUser = async(req,res)=>{
     const{last_name, first_name, birthday, email, password, telephone, username, city} = req.body;
 
     
-    const EXPIRATION_DATE = new DATE(Date.now() + 1000);
-    EXPIRATION_DATE   = EXPIRATION_DATE.toUTCString();
+    
      ////duree de vie de de 3min;
     try{
         ///hashage renouveller chaque fois pour le même mot de pass
@@ -30,7 +31,7 @@ exports.newUser = async(req,res)=>{
         const SECRET_KEY = "azerty"
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
-        const cookie = res.cookie(username, token, {expires: EXPIRATION_DATE});
+        const cookie = res.cookie('authentication', token, {expires: new Date(Date.now()/1000 + 3600 )}) ;
         // requête ajout de l'utilisateur dans la database
         model.createUser(req.body,(err,response)=>{
             if(err){
@@ -70,13 +71,15 @@ exports.login = (req, res) => {
 
 exports.addTweet = (req, res) =>{
 
-    const cookieValule   = req.cookies.authentication;//coresponding to token saved on login or signup
-    const base64_payload = cookieValule.split('.')[1];
+    const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
+    const base64_payload = cookieValue.split('.')[1];
     const loading_payload = Buffer(base64_payload,'base64');
     const decoded =  loading_payload.toString('ascii');
     const USER_ID = JSON.parse(decoded).USER_ID;
 
     const tweet_message = req.body.message;
+
+    
 
     
     model.createTweet(USER_ID, tweet_message, (err,response)=>{
@@ -91,11 +94,11 @@ exports.addTweet = (req, res) =>{
 
 //middleware to authenticate user when browsing
 exports.authentication=(req,res,next)=>{
-    req.authenticate = "true";
+    
     next();
     //date d'expiration du cookie 
 
-    const EXPIRATION_DATE = new Date(Date.now() + 84000);
+    const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
 
     const{username} = req.body;
 
@@ -106,7 +109,8 @@ exports.authentication=(req,res,next)=>{
         console.log(ID);
 
         const user = {
-                USER_ID : ID[0].id
+                USER_ID : ID[0].id,
+                expiration: EXPIRATION_DATE
             }
 
         const SECRET_KEY = "azerty"
@@ -127,3 +131,40 @@ exports.logout = (req,res, next)=>{
     next();
 
 }
+
+///////////////////20 derniers tweets ////////////////////////////////////////////////////////
+exports.displayTweets = (req, res, next) =>{
+    console.log("tweet present");
+
+
+    model.tweetDisplay((err, response) => {
+        if(err){
+            console.log("erro404");
+        }
+        console.log(response);
+        res.render('home.ejs',{response});
+        
+    })
+
+
+}
+
+
+
+// exports.regenerateCookie = (req, res, next) =>{
+  
+
+//     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
+//     const base64_payload = cookieValue.split('.')[1];
+//     const loading_payload = Buffer(base64_payload,'base64');
+//     const decoded =  loading_payload.toString('ascii');
+//     const expirationDateCookie = JSON.parse(decoded).expiration;
+
+//     if (Date.now() - expirationDateCookie < 30000){
+
+//         const token = cookieValue;
+//         res.cookie("authentication", token, {expires:expirationDateCookie})
+//     }
+//     next();
+// }
+
