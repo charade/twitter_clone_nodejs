@@ -20,7 +20,6 @@ exports.newUser = async(req,res)=>{
         //on change la valuer du mot de pass par le hash
         req.body.password = await hash;
 
-        console.log(req.body);
         //payload token
         const user = {
             user_lastname : last_name,
@@ -52,7 +51,7 @@ exports.login = (req, res) => {
  
     // reponse de la requête
     model.userLogin (username, async (error, response)=>{
-        console.log(response[0].hash)
+        
         if(error) {
             res.send(error.message);
         }
@@ -86,7 +85,7 @@ exports.addTweet = (req, res) =>{
         if(err){
             res.send(err.message);
         }
-        console.log('tweet it');
+        
         res.redirect('/home');
     })
 }
@@ -106,7 +105,7 @@ exports.authentication=(req,res,next)=>{
         if(err){
             res.send(err.message);
         } 
-        console.log(ID);
+    
 
         const user = {
                 USER_ID : ID[0].id,
@@ -133,20 +132,37 @@ exports.logout = (req,res, next)=>{
 }
 
 ///////////////////20 derniers tweets ////////////////////////////////////////////////////////
-exports.displayTweets = (req, res, next) =>{
-    console.log("tweet present");
-
-
+exports.displayTweets = (req, res) =>{
     model.tweetDisplay((err, response) => {
         if(err){
             console.log("erro404");
         }
-        console.log(response);
-        res.render('home.ejs',{response});
-        
+        res.render('home.ejs',{response}); 
     })
+}
 
 
+ exports.allUserTweets = async (req, res) =>{
+    
+    const token = req.cookies.authentication; //coresponding to token saved on login or signup
+    try{
+        const SECRET_KEY = "azerty"
+        const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
+        const userId = isAuthentic.USER_ID;
+        console.log(isAuthentic);
+
+        //////reponse de la requete..../////////////////
+        model.userTweets(userId, (err,response) => {
+            if(err){
+                console.log("quelques chose");
+            }
+            res.render("profile.ejs",{response} );
+            console.log(response);
+        })
+    }
+    catch (error) {
+        res.send("veuilez vous connecter");
+    }
 }
 
 

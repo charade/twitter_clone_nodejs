@@ -18,12 +18,10 @@ router.get('/signup',(req,res)=>{
     res.sendFile(path.join( __dirname, '../html/signup.html'));
 })
 ///espace personnel
-router.get('/home', controller.displayTweets)
+router.get('/home', controller.displayTweets);
     
-
-router.get('/username', (req,res)=>{
-    res.sendFile(path.join(__dirname, '../html/profile.html'));
-})
+////////espace personnel avec tous les tweets de l'utilisateur///////////////
+router.get('/username', controller.allUserTweets);
 
 
 
@@ -42,7 +40,7 @@ router.post('/login', controller.authentication, controller.login);
 module.exports = router;
 
 
-/////////////////test tweet views////////
+
 
 
 

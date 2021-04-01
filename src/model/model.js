@@ -60,3 +60,15 @@ exports.tweetDisplay = (callback) =>{
     })
 
 }
+
+exports.userTweets = (user_id, callback) =>{
+    db.query(` SELECT users.pseudo, users.city, tweets.text, tweets.creation_date FROM tweets INNER JOIN users ON tweets.author_id = users.id WHERE author_id = ${user_id};`
+     , (err,response) =>{
+        if (err) {
+            callback(err, null);
+            return;
+        }
+        callback(null,response);
+    })
+
+}

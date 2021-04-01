@@ -123,7 +123,6 @@
 
 .comments {
   &-comment {
-
       display: flex;
       padding: 3%;
       border-bottom: 1px solid grey;
@@ -148,9 +147,7 @@
           }
           &-username {
               font-weight: bold;
-              margin:0 5% 3% 0;
-
-              
+              margin-bottom: 3%;
           }
           &-date {
               margin-left: 2%;
