@@ -12,7 +12,7 @@ app.use(cookieParser());
 app.use(router);
 app.use(express.static('./src/images'));
 app.use(express.static('./src/css'));
-// app.use(express.static('./src/html'));
+app.use(express.static('./src/js'));
 
 app.engine("ejs", ejs.renderFile);
 app.set("views", "./src/views");

@@ -42,7 +42,7 @@ router.post('/login', controller.authentication, controller.login);
 
 module.exports = router;
 
-
+router.post('/edit_tweet/:id', controller.editTweet);
 
 
 

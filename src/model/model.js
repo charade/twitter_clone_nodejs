@@ -82,3 +82,15 @@ exports.deleteTweet = (tweet_id, callback) =>{
         callback(null,response);
     })
 }
+
+///editing tweet query
+exports.editTweet = (id,new_text,callback)=>{
+    db.query(`UPDATE tweets SET text = "${new_text}" where id = ${id};`,(err,resp)=>{
+
+        if(err){
+            callback(err,null);
+            return;
+        }
+        callback(null,err)
+    })
+}

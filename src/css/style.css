@@ -325,4 +325,38 @@ body {
           flex-direction: column;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
 }
+
+.modification-icons-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.modification-icons-block > * {
+  margin-right: 2%;
+}
+
+.validate-tweet-edition-button {
+  display: none;
+  -webkit-transition: .2s;
+  transition: .2s;
+  padding-right: 1%;
+  border: none;
+}
+
+.edit-active {
+  display: block;
+}
+
+.comments-comment-content-text {
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-top: 3%;
+  font-size: 1.2rem;
+  outline: none;
+}
 /*# sourceMappingURL=style.css.map */
