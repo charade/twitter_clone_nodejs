@@ -19,7 +19,8 @@ router.get('/signup',(req,res)=>{
 })
 ///espace personnel
 router.get('/home', controller.displayTweets);
-    
+//////////////////////
+router.post('/edit_tweet/:id', controller.editTweet);
 ////////espace personnel avec tous les tweets de l'utilisateur///////////////
 router.get('/username', controller.allUserTweets, controller.noTweetsView);
 
@@ -42,7 +43,7 @@ router.post('/login', controller.authentication, controller.login);
 
 module.exports = router;
 
-router.post('/edit_tweet/:id', controller.editTweet);
+
 
 
 

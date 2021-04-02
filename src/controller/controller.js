@@ -31,7 +31,7 @@ exports.newUser = async(req,res)=>{
             if(err){
                 res.send(err.message);
             }
-            res.redirect('/home');
+            res.redirect('/');
         })
       }
     catch(err){
@@ -181,7 +181,7 @@ exports.editTweet  = (req,res)=>{
 
     const id = req.params.id;
     const {new_text_content} = req.body;
-    
+
     model.editTweet(id,new_text_content,(err,response)=>{
         if(err){
             res.send(err.message);
