@@ -2,7 +2,7 @@ const edit_icons = Array.from(document.querySelectorAll(".edit-icon"));
 ///button qui envoi les données
 const validate_buttons = Array.from(document.querySelectorAll('input.validate-tweet-edition-button'));
 ///les champ de saisie qui permet de modifier un tweet
-const inputs_text = Array.from(document.querySelectorAll('input.comments-comment-content-text'));
+const inputs_text = Array.from(document.querySelectorAll('input.text-field-edit'));
 ///correspond aux p qui affiche le tweet dans le block
 const tweet_text_content = Array.from(document.querySelectorAll('.display-tweet-content'));
 ///les formulaires d'envoi des modifications des tweets
