@@ -3,58 +3,83 @@
   align-items: center;
   flex-direction: column;
   h1 {
-      color: #ffff;
+    // color: #ffff;
+    color: black;
   }
   &-image {
-      width: 3vw;
-      margin: 5vh 0;
+    width: 3vw;
+    margin: 5vh 0;
   }
   &-error {
-      padding-top: 2%;
-      color: #e0245e;
-      font-weight: normal;
+    padding-top: 2%;
+    color: #e0245e;
+    font-weight: normal;
   }
 }
 
 .form {
   width: 40vw;
   &-input {
-      margin-top: 5vh;
-      background-color: #192734;
-      label {
-          color: #657786;
-          padding: 1vh;
-          line-height: 1vh;
-      }
-      input {
-          color: #fff;
-          background-color: #192734;
-          padding: 1%;
-          height: 5vh;
-          width: 100%;
-          border: none;
-          border-bottom: 2px solid grey;
-      }
-  }
-  button {
-      background-color: #1DA1F2;
-      color: white;
+    margin-top: 5vh;
+    // background-color: #192734;
+
+    label {
+      color: #657786;
+      padding: 1vh;
+      line-height: 1vh;
+    }
+    input {
+      // color: #fff;
+      // background-color: #192734;
+      color: black;
+      background-color: #fff;
+      padding: 1%;
+      height: 4vh;
       width: 100%;
-      margin-top: 5vh;
-      border-radius: 50px;
       border: none;
-      padding: 3vh 0;
-      font-weight: bold;
-      cursor: pointer;
-  }
-  &-link {
-      display: flex;
-      justify-content: center;
-      padding: 5%;
-      a {
-          padding: 0 1%;
-          color: #1DA1F2;
-          text-decoration: none;
+      border-bottom: 1px solid grey;
+      font-size: 0.9rem;
+
+      &:focus {
+        outline: 1px solid #1da1f2;
+        box-shadow: 0 0 7px #1da1f2;
       }
+    }
+  }
+
+  button {
+    background-color: #1da1f2;
+    color: white;
+    width: 100%;
+    margin-top: 5vh;
+    border-radius: 50px;
+    border: none;
+    padding: 3vh 0;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &-link {
+    display: flex;
+    justify-content: center;
+    padding: 5%;
+    a {
+      padding: 0 1%;
+      color: #1da1f2;
+      text-decoration: none;
+    }
   }
 }
+
+// .home-error {
+//   background: white;
+//   width: 40vw;
+//   text-align: center;
+//   height: 4vh;
+//   color: red;
+// }

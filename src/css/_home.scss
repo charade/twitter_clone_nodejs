@@ -2,39 +2,52 @@
   height: 100vh;
   width: 100vw;
   display: flex;
-  background-color: #16212b;
-  color: white;
+  // background-color: #16212b;
+  background-color: #fff;
+  // color: white;
+  color: black;
 }
 
 .tweet-navigation {
-  width: 25vw;
+  width: 24vw;
   height: 100%;
   display: flex;
   flex-direction: column;
   padding: 0 2.5%;
   &-image {
-      width: 3vw;
-      margin: 5vh 0;
+    width: 3vw;
+    margin: 5vh 0;
   }
   &-link {
+    display: flex;
+    flex-direction: column;
+    a {
+      height: 7vh;
       display: flex;
-      flex-direction: column;
-      a {
-          height: 7vh;
-          display: flex;
-          align-items: center;
-          text-decoration: none;
-          margin-bottom: 5%;
-          color: #fff;
-          img {
-              width: auto;
-              height: 40%;
-          }
-          h2 {
-              font-size: 20px;
-              margin-left: 3%;
-          }
+      align-items: center;
+      text-decoration: none;
+      margin-bottom: 5%;
+      // color: #fff;
+      color: black;
+      &:hover {
+        background-color: #f4f8fc;
+        color: #1da1f2;
+        border-radius: 30px;
+        width: 160px;
       }
+
+      img {
+        width: auto;
+        height: 40%;
+        // Change la couleur de blanc en noir
+        filter: brightness(0);
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-left: 3%;
+      }
+    }
   }
 }
 
@@ -44,122 +57,139 @@
   overflow-y: scroll;
   border-right: 1px solid gray;
   border-left: 1px solid gray;
+  h3 {
+    font-size: 1.7rem;
+  }
   &-title {
-      display: flex;
-      align-items: center;
-      z-index: 99;
-      padding-left: 1.5%;
-      width: 49vw;
-      height: 10vh;
-      position: fixed;
-      border-bottom: 1px solid gray;
-      background-color: #16212b;
+    display: flex;
+    align-items: center;
+    z-index: 99;
+    padding-left: 1.5%;
+    width: 46vw;
+    height: 10vh;
+    position: fixed;
+    border-bottom: 1px solid gray;
+    // background-color: #16212b;
   }
   &-form {
-      margin-top: 10vh;
-      width: 100%;
-      border-bottom: 10px solid rgba(128, 128, 128, 0.5);
+    margin-top: 10vh;
+    width: 100%;
+    border-bottom: 10px solid rgba(128, 128, 128, 0.5);
   }
   &-text {
-      display: flex;
+    display: flex;
+    width: 90%;
+    padding: 3% 3% 0 3%;
+    img {
+      width: 15%;
+      height: auto;
+      border-radius: 50%;
+    }
+    textarea {
       width: 100%;
-      padding: 3% 3% 0 3%;
-      img {
-          width: 15%;
-          height: auto;
-          border-radius: 50%;
+      margin-left: 3%;
+      padding: 3%;
+      background-color: transparent;
+      color: black;
+      border: none;
+      font-size: 20px;
+      &:focus {
+        outline: 1px solid #1da1f2;
+        box-shadow: 0 0 7px #1da1f2;
       }
-      textarea {
-          width: 100%;
-          margin-left: 3%;
-          padding: 1%;
-          background-color: transparent;
-          color: white;
-          border: none;
-          font-size: 20px;
-      }
+    }
   }
   &-button {
-      width: 100%;
-      display: flex;
-      justify-content: flex-end;
-      padding: 0 3% 3% 0;
-      button {
-          background-color: #1DA1F2;
-          color: white;
-          border: none;
-          padding: 1% 2%;
-          border-radius: 50px;
-          cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 3% 3% 0;
+    button {
+      background-color: #1da1f2;
+      color: white;
+      border: none;
+      padding: 1% 2%;
+      border-radius: 50px;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.9;
       }
+    }
   }
   &-profile {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      margin-top: 10vh;
-      position: relative;
-      &-background {
-          height: 25vh;
-          background-color: #3d5566;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10vh;
+    position: relative;
+    &-background {
+      height: 25vh;
+      // background-color: #3d5566;
+    }
+    &-picture {
+      position: absolute;
+      top: 12.5vh;
+      left: 3%;
+      img {
+        height: 20vh;
+        width: 20vh;
+        border-radius: 50%;
       }
-      &-picture {
-          position: absolute;
-          top: 12.5vh;
-          left: 3%;
-          img {
-              height: 20vh;
-              width: 20vh;
-              border-radius: 50%;
-          }
-      }
-      &-infos {
-          height: 25vh;
-          padding: 10vh 3%;
-          border-bottom: 1px solid grey;
-      }
+    }
+    &-infos {
+      height: 25vh;
+      padding: 10vh 3%;
+      border-bottom: 1px solid grey;
+    }
   }
 }
 
 .comments {
   &-comment {
-      display: flex;
-      padding: 3%;
-      border-bottom: 1px solid grey;
+    display: flex;
+    padding: 3%;
+    border-bottom: 1px solid grey;
+    width: 100%;
+    a {
+      text-decoration: none;
+    }
+    img {
+      width: 10vh;
+      height: 10vh;
+      border-radius: 50%;
+    }
+    &-content {
+      margin-left: 3%;
+      min-width: 65%;
+      max-width: 65%;
+      &-nameDate {
+        display: flex;
+      }
       a {
-          text-decoration: none;
+        text-decoration: none;
+        color: black;
+        &:hover{
+          text-decoration: underline;
+          text-underline-offset: 0.2em;
+          text-decoration-thickness: 0.1em;
+        }
       }
-      img {
-          width: 10vh;
-          height: 10vh;
-          border-radius: 50%;
+      &-username {
+        font-weight: 500;
+        margin-bottom: 3%;
       }
-      &-content {
-          margin-left: 3%;
-          min-width: 80%;
-          max-width: 80%;
-          &-nameDate {
-              display: flex;
-          }
-          a {
-              text-decoration: none;
-              color: #fff;
-          }
-          &-username {
-              font-weight: bold;
-              margin-bottom: 3%;
-          }
-          &-date {
-              margin-left: 2%;
-              display: flex;
-              align-items: center;
-              font-weight: normal;
-              font-size: 0.75rem;
-          }
-          &-text {
-              line-height: 1.5rem;
-          }
+      &-date {
+        margin-top: 4%;
+        margin-left: 3%;
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+        font-size: 0.75rem;
       }
+      &-text {
+        line-height: 1.5rem;
+      }
+    }
   }
 }
 

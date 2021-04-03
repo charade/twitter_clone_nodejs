@@ -4,6 +4,7 @@ const jwt = require ("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const e = require("express");
 const { render } = require("ejs");
+const { request } = require("express");
 
 /////inscription
 exports.newUser = async(req,res)=>{
@@ -42,15 +43,17 @@ exports.newUser = async(req,res)=>{
 ///checkpoint à la login page
 exports.login = (req, res) => {
     const {username, password} = req.body;
- 
+
     // reponse de la requête
     model.userLogin (username, async (error, response)=>{
         
         if(error) {
             res.send(error.message);
-        }
+        } 
         if(response.length ===0) {
             res.send("User doesn't exist !")
+            
+            
         }  else {
             const checkPassword = await bcrypt.compare(password, response[0].hash);
             if(checkPassword) {
@@ -62,7 +65,7 @@ exports.login = (req, res) => {
     })
 }
 
-////ajout de tweet par l'utilisateur connecté
+//ajout de tweet par l'utilisateur connecté
 exports.addTweet = (req, res) =>{
     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
     const base64_payload = cookieValue.split('.')[1];
@@ -80,7 +83,7 @@ exports.addTweet = (req, res) =>{
     })
 }
 
-//middleware to authenticate user when browsing
+// middleware to authenticate user when browsing
 exports.authentication=(req,res,next)=>{
     
     //date d'expiration du cookie 
@@ -104,7 +107,9 @@ exports.authentication=(req,res,next)=>{
     })
 }
 
-////deconnexion
+
+
+//deconnexion
 exports.logout = (req,res, next)=>{
     // const token = req.cookies.authentication;
     // res.cookie('authentication',token,{expires : new Date(Date.now() - 84000)});
@@ -122,7 +127,7 @@ exports.displayTweets = (req, res) =>{
     })
 }
 
-////affiche tous les tweets de l'utilisateur connecté sur la page de son profil
+//affiche tous les tweets de l'utilisateur connecté sur la page de son profil
 exports.allUserTweets = async (req, res , next) =>{
     const token = req.cookies.authentication; //coresponding to token saved on login or signup
     
@@ -131,7 +136,7 @@ exports.allUserTweets = async (req, res , next) =>{
         const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
         const userId = isAuthentic.USER_ID;
         console.log(isAuthentic);
-        //////reponse de la requete..../////////////////
+        //reponse de la requete....
         model.userTweets(userId, (err,response) => {
             if(err){
                 console.log("quelques chose");

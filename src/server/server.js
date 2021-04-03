@@ -5,6 +5,8 @@ const router = require("../router/router");
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const {flash} = require("express-flash-message");
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
@@ -14,13 +16,22 @@ app.use(express.static('./src/images'));
 app.use(express.static('./src/css'));
 app.use(express.static('./src/js'));
 
+app.use(session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {secure: true}
+}));
+
+app.use(flash({ sessionKeyName: "flashMessage"}));
+
 app.engine("ejs", ejs.renderFile);
 app.set("views", "./src/views");
 
 //inscription d'un utilisateur
 app.get('/register');
 
-app.listen(2000,()=>console.log('server on'));
+app.listen(2000,()=>console.log('server on')); 
 
 
 
