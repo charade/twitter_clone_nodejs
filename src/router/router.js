@@ -10,13 +10,18 @@ const controller = require ('../controller/controller');
 router.post('/tweet', controller.addTweet);
 
 ///login page est à la racine
-router.get('/',controller.logout,(req,res)=>{
-   res.sendFile(path.join( __dirname, '../html/login.html'));
+router.get('/',controller.logout, async (req,res)=>{
+    const error_msg = await req.consumeFlash("warning")
+   res.render('login.ejs', {error_msg});
 })
+
 ///page signup
 router.get('/signup',(req,res)=>{
     res.sendFile(path.join( __dirname, '../html/signup.html'));
 })
+
+// signup + authentification
+router.post('/register', controller.newUser);
 ///espace personnel
 router.get('/home', controller.displayTweets);
 //////////////////////
@@ -27,19 +32,14 @@ router.get('/username', controller.allUserTweets, controller.noTweetsView);
 ///////////supprimer les tweets/////////////////
 router.get('/delete/:id', controller.deleteUserTweets);
 
-
-
 //le logout supprime le cookie d'authentification
 router.get('/',  controller.logout, (req,res)=>{
      res.redirect('/home');
  })
 
 
-// signup + authentification
-router.post('/signup', controller.newUser);
-
 // login + authentification
-router.post('/login', controller.authentication, controller.login);
+router.post('/login', controller.login, controller.authentication);
 
 module.exports = router;
 

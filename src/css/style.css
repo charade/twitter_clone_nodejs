@@ -393,8 +393,12 @@ body {
 .tweet-details {
   position: absolute;
   left: 1%;
-  color: rgba(255, 255, 255, 0.521);
+  color: black;
   cursor: pointer;
+}
+
+.tweet-details:hover {
+  color: #1da1f2;
 }
 
 .validate-tweet-edition-button {

@@ -9,8 +9,8 @@ function queryResponse (callback, err, status_ok) {
 }
 
 
-exports.createUser = (user,callback)=>{
-    db.query(`INSERT INTO users(lastname, firstname, dateofbirth, email, hash, phonenumber, pseudo, city) VALUES ("${user.last_name}", "${user.first_name}", "${user.birthday}", "${user.email}", "${user.password}", "${user.telephone}", "${user.username}", "${user.city}");`,
+exports.createUser = (user, picture, callback)=>{
+    db.query(`INSERT INTO users(lastname, firstname, dateofbirth, email, hash, phonenumber, pseudo, city, avatar) VALUES ("${user.last_name}", "${user.first_name}", "${user.birthday}", "${user.email}", "${user.password}", "${user.telephone}", "${user.username}", "${user.city}", "${picture});`,
      (err, status_ok)=>{
             if(err){
                 callback(err,null);
@@ -21,7 +21,7 @@ exports.createUser = (user,callback)=>{
 }
 
 exports.userLogin = (username, callback) => {
-    db.query(`SELECT id, hash FROM users WHERE pseudo="${username}";`, 
+    db.query(`SELECT id, hash, city, avatar FROM users WHERE pseudo="${username}";`, 
         (err, status_ok)=>{
             if(err){
                 callback(err,null);
@@ -32,12 +32,12 @@ exports.userLogin = (username, callback) => {
         });
 }
 
-exports.getUserID = (username, callback) =>{
-    db.query(`SELECT id, city FROM users WHERE pseudo = "${username}";`,(err,response)=>{
-        if(err) return callback(err,null);
-        callback(null,response);
-    }) 
-}
+// exports.getUserID = (username, callback) =>{
+//     db.query(`SELECT id, city FROM users WHERE pseudo = "${username}";`,(err,response)=>{
+//         if(err) return callback(err,null);
+//         callback(null,response);
+//     }) 
+// }
 
 exports.createTweet = (id,text,callback) =>{
     db.query(`INSERT INTO tweets(author_id, text) VALUES(${id},"${text}");`,(err,response)=>{

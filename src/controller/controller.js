@@ -5,11 +5,13 @@ const bcrypt = require("bcrypt");
 const e = require("express");
 const { render } = require("ejs");
 const { request } = require("express");
+const multer = require("multer");
 
 /////inscription
 exports.newUser = async(req,res)=>{
 
     const{last_name, first_name, birthday, email, password, telephone, username, city} = req.body;
+
     try{
         ///hashage renouveller chaque fois pour le même mot de pass
         const hash = await bcrypt.hash(password,10);
@@ -20,7 +22,7 @@ exports.newUser = async(req,res)=>{
         const user = {
             user_lastname : last_name,
             user_firstname : first_name,
-            user_name : username,
+            user_name : username
         }
         ///crération du token
         const SECRET_KEY = "azerty"
@@ -28,7 +30,7 @@ exports.newUser = async(req,res)=>{
         //stockage du token
         const cookie = res.cookie('authentication', token, {expires: new Date(Date.now()/1000 + 3600 )}) ;
         // requête ajout de l'utilisateur dans la database
-        model.createUser(req.body,(err,response)=>{
+        model.createUser(req.body, req.file.picture, (err,response)=>{
             if(err){
                 res.send(err.message);
             }
@@ -41,9 +43,9 @@ exports.newUser = async(req,res)=>{
 }
 
 ///checkpoint à la login page
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
     const {username, password} = req.body;
-
+    
     // reponse de la requête
     model.userLogin (username, async (error, response)=>{
         
@@ -51,28 +53,28 @@ exports.login = (req, res) => {
             res.send(error.message);
         } 
         if(response.length ===0) {
-            res.send("User doesn't exist !")
-            
-            
+            await req.flash("warning", "This user doesn't exist!");
+            res.redirect("/");
         }  else {
             const checkPassword = await bcrypt.compare(password, response[0].hash);
             if(checkPassword) {
-                res.redirect("/home");
+                next();
                 return;
             } 
-            res.send("Invalid Password !");
+            await req.flash("warning", "Invalid Password")
+            res.redirect("/");
             } 
     })
 }
 
 //ajout de tweet par l'utilisateur connecté
-exports.addTweet = (req, res) =>{
+exports.addTweet = async (req, res) =>{
     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
-    const base64_payload = cookieValue.split('.')[1];
-    const loading_payload = Buffer(base64_payload,'base64');
-    const decoded =  loading_payload.toString('ascii');
-    const USER_ID = JSON.parse(decoded).USER_ID;
-
+    // const base64_payload = cookieValue.split('.')[1];
+    // const loading_payload = Buffer(base64_payload,'base64');
+    // const decoded =  loading_payload.toString('ascii');
+    // const USER_ID = JSON.parse(decoded).USER_ID;
+    const user_id = await jwt.verify(cookieValue, "azerty").USER_ID;
     const tweet_message = req.body.message;
     model.createTweet(USER_ID, tweet_message, (err,response)=>{
         if(err){
@@ -84,29 +86,34 @@ exports.addTweet = (req, res) =>{
 }
 
 // middleware to authenticate user when browsing
-exports.authentication=(req,res,next)=>{
+exports.authentication= (req,res,next)=>{
     
     //date d'expiration du cookie 
     const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
     const{username} = req.body;
-    model.getUserID(username,(err,ID)=>{
+    model.userLogin(username,(err,ID)=>{
+
         if(err){
             res.send(err.message);
         } 
+
         const user = {
-            username : username,
+            username : ID[0].username,
             USER_ID : ID[0].id,
             expiration: EXPIRATION_DATE,
-            city: ID[0].city
+            city: ID[0].city,
+            avatar: ID[0].avatar
         }
+        
         const SECRET_KEY = "azerty"
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
         res.cookie("authentication", token, {expires: EXPIRATION_DATE});
-        next();
+        res.redirect("/home")
+        
+        
     })
 }
-
 
 
 //deconnexion
@@ -195,6 +202,9 @@ exports.editTweet  = (req,res)=>{
     })
 }
 
+// exports.uploadAvatar = (req, res)=>{
+    
+// }
 
 // exports.regenerateCookie = (req, res, next) =>{
   

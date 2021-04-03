@@ -15,10 +15,9 @@
     <img class="home-image" src="/logoTwitter.png" alt="logoTwitter">
     <h1 class="home-title">Connect on Twitter</h1>
     
-   
-      <h3 class="home-error">error</h3>
-    
-
+    <%error_msg.forEach((warning)=>{ %>
+      <h3 class="home-error"><%=warning%></h3>
+    <%});%>
   </div>
 
   <form action="/login" method="POST" class="form">
