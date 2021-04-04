@@ -32,7 +32,7 @@ app.set("views", "./src/views");
 //inscription d'un utilisateur
 app.get('/register');
 
-app.listen(2000,()=>console.log('server on')); 
+app.listen(3000,()=>console.log('server on')); 
 
 
 

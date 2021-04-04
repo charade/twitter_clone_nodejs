@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const e = require("express");
 const { render } = require("ejs");
 const { request } = require("express");
-const multer = require("multer");
 
 /////inscription
 exports.newUser = async(req,res)=>{
@@ -70,11 +69,10 @@ exports.login = (req, res, next) => {
 //ajout de tweet par l'utilisateur connecté
 exports.addTweet = async (req, res) =>{
     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
-    // const base64_payload = cookieValue.split('.')[1];
-    // const loading_payload = Buffer(base64_payload,'base64');
-    // const decoded =  loading_payload.toString('ascii');
-    // const USER_ID = JSON.parse(decoded).USER_ID;
-    const user_id = await jwt.verify(cookieValue, "azerty").USER_ID;
+    const base64_payload = cookieValue.split('.')[1];
+    const loading_payload = Buffer(base64_payload,'base64');
+    const decoded =  loading_payload.toString('ascii');
+    const USER_ID = JSON.parse(decoded).USER_ID;
     const tweet_message = req.body.message;
     model.createTweet(USER_ID, tweet_message, (err,response)=>{
         if(err){
@@ -102,7 +100,7 @@ exports.authentication= (req,res,next)=>{
             USER_ID : ID[0].id,
             expiration: EXPIRATION_DATE,
             city: ID[0].city,
-            avatar: ID[0].avatar
+            // avatar: ID[0].avatar
         }
         
         const SECRET_KEY = "azerty"
@@ -124,7 +122,7 @@ exports.logout = (req,res, next)=>{
     next();
 }
 
-///////////////////20 derniers tweets ////////////////////////////////////////////////////////
+//20 derniers tweets 
 exports.displayTweets = (req, res) =>{
     model.tweetDisplay((err, response) => {
         if(err){
@@ -202,9 +200,6 @@ exports.editTweet  = (req,res)=>{
     })
 }
 
-// exports.uploadAvatar = (req, res)=>{
-    
-// }
 
 // exports.regenerateCookie = (req, res, next) =>{
   
