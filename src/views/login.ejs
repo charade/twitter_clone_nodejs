@@ -16,7 +16,10 @@
     <h1 class="home-title">Connect on Twitter</h1>
     
     <%error_msg.forEach((warning)=>{ %>
-      <h3 class="home-error"><%=warning%></h3>
+      <div class="warning">  
+        <h3 class="home-error"><%=warning%></h3>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      </div>
     <%});%>
   </div>
 
