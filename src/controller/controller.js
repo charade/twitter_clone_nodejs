@@ -208,11 +208,15 @@ exports.noTweetsView = async (req, res) => {
 }
 
 
-exports.editTweet  = (req,res)=>{
+exports.editTweet  = async(req,res)=>{
 
+    const token  = req.cookies.authentication;
+    const userId = await jwt.verify(token,"azerty").USER_ID;
     const id = req.params.id;
+    console.log('user_id : ' + userId, 'tweet_id : ' + id);
+    
     const {new_text_content} = req.body;
-
+    console.log(id)
     model.editTweet(id,new_text_content,(err,response)=>{
         if(err){
             res.send(err.message);
@@ -221,9 +225,7 @@ exports.editTweet  = (req,res)=>{
     })
 }
 
-// exports.uploadAvatar = (req, res)=>{
-    
-// }
+
 
 // exports.regenerateCookie = (req, res, next) =>{
   

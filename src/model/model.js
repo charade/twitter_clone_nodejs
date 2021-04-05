@@ -62,7 +62,7 @@ exports.tweetDisplay = (callback) =>{
 }
 
 exports.userTweets = (user_id, callback) =>{
-    db.query(`SELECT * FROM tweets INNER JOIN users ON tweets.author_id = users.id WHERE author_id = ${user_id};`
+    db.query(`SELECT tweets.id, users.avatar, tweets.text, users.pseudo,  tweets.creation_date, users.city  FROM tweets INNER JOIN users ON tweets.author_id = users.id WHERE users.id = ${user_id};`
      , (err,response) =>{
         if (err) {
             callback(err, null);
@@ -84,8 +84,11 @@ exports.deleteTweet = (tweet_id, callback) =>{
 }
 
 ///editing tweet query
-exports.editTweet = (id,new_text,callback)=>{
-    db.query(`UPDATE tweets SET text = "${new_text}" where id = ${id};`,(err,resp)=>{
+exports.editTweet = async (id,new_text,callback)=>{
+
+    
+
+    db.query(`UPDATE tweets SET text = "${new_text}" where tweets.id = ${id};`,(err,resp)=>{
 
         if(err){
             callback(err,null);
