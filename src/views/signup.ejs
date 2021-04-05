@@ -16,8 +16,10 @@
     <img class="home-image" src="/logoTwitter.png" alt="logoTwitter">
     <h1 class="home-title">Create your account</h1>
   </div>
-
-  <form class="form" action="/register" method="post">
+        <% err.forEach(err => {%>
+        <h3 class="home-error"><%= err %></h3>
+      <%})%>
+  <form class="form" action="/register" method="post" encType = "multipart/form-data">
     <div class="form-input">
       <label for="first_name">First Name</label>
       <input type="text" name="first_name" id="first_name" required>

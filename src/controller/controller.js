@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const e = require("express");
 const { render } = require("ejs");
 const { request } = require("express");
-const multer = require("multer");
 
 /////inscription
 exports.newUser = async(req,res)=>{
@@ -30,17 +29,37 @@ exports.newUser = async(req,res)=>{
         //stockage du token
         const cookie = res.cookie('authentication', token, {expires: new Date(Date.now()/1000 + 3600 )}) ;
         // requête ajout de l'utilisateur dans la database
-        model.createUser(req.body, req.file.picture, (err,response)=>{
+        const img = req.files.picture;
+        const img_base64_data = img.data.toString('base64');
+
+        ////test si un utilisateur ale même pseudo///////////:
+        model.userLogin(username,async (err,IsUserExiste)=>{
             if(err){
-                res.send(err.message);
+                res.send(err);
+                return;
             }
-            res.redirect('/');
-        })
-      }
+            if(IsUserExiste.length > 0){
+                await req.flash('userExist', "username already exists");
+                res.redirect('/signup');
+            }
+            else{
+                model.createUser(req.body, img_base64_data , (err,response)=>{
+                    if(err){
+                        res.send(err.message);
+                    }
+                    res.redirect('/signup');
+                  })
+            }
+           
+          })
+    }
     catch(err){
         console.log(err.message);
     }
 }
+    
+       
+
 
 ///checkpoint à la login page
 exports.login = (req, res, next) => {
@@ -61,6 +80,7 @@ exports.login = (req, res, next) => {
                 next();
                 return;
             } 
+            
             await req.flash("warning", "Invalid Password")
             res.redirect("/");
             } 
@@ -76,7 +96,7 @@ exports.addTweet = async (req, res) =>{
     // const USER_ID = JSON.parse(decoded).USER_ID;
     const user_id = await jwt.verify(cookieValue, "azerty").USER_ID;
     const tweet_message = req.body.message;
-    model.createTweet(USER_ID, tweet_message, (err,response)=>{
+    model.createTweet(user_id, tweet_message, (err,response)=>{
         if(err){
             res.send(err.message);
         }
@@ -91,6 +111,7 @@ exports.authentication= (req,res,next)=>{
     //date d'expiration du cookie 
     const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
     const{username} = req.body;
+
     model.userLogin(username,(err,ID)=>{
 
         if(err){
@@ -98,13 +119,12 @@ exports.authentication= (req,res,next)=>{
         } 
 
         const user = {
-            username : ID[0].username,
+            username : username,
             USER_ID : ID[0].id,
             expiration: EXPIRATION_DATE,
             city: ID[0].city,
-            avatar: ID[0].avatar
         }
-        
+        console.log(user);
         const SECRET_KEY = "azerty"
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
@@ -142,16 +162,15 @@ exports.allUserTweets = async (req, res , next) =>{
         const SECRET_KEY = "azerty"
         const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
         const userId = isAuthentic.USER_ID;
-        console.log(isAuthentic);
         //reponse de la requete....
         model.userTweets(userId, (err,response) => {
             if(err){
                 console.log("quelques chose");
+                return;
             }
            if(response.length > 0){
 
                res.render("profile.ejs",{response} );
-               console.log(response);
            } 
            else 
                next();

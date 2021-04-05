@@ -16,8 +16,9 @@ router.get('/',controller.logout, async (req,res)=>{
 })
 
 ///page signup
-router.get('/signup',(req,res)=>{
-    res.sendFile(path.join( __dirname, '../html/signup.html'));
+router.get('/signup',async(req,res)=>{
+    const err = await req.consumeFlash('userExist')
+    res.render('signup.ejs',{err});
 })
 
 // signup + authentification
@@ -33,9 +34,9 @@ router.get('/username', controller.allUserTweets, controller.noTweetsView);
 router.get('/delete/:id', controller.deleteUserTweets);
 
 //le logout supprime le cookie d'authentification
-router.get('/',  controller.logout, (req,res)=>{
-     res.redirect('/home');
- })
+// router.get('/',  controller.logout, (req,res)=>{
+//      res.redirect('/home');
+//  })
 
 
 // login + authentification

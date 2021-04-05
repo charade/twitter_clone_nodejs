@@ -49,7 +49,7 @@
           <img src="" alt="">
         </div>
         <div class="tweet-container-profile-picture">
-          <img src="" alt="">
+          <img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt="">
         </div>
         <div class="tweet-container-profile-infos">
           <h3><%=  response[0].pseudo %></h3>
@@ -62,7 +62,7 @@
       <div class="comments">
         <% response.forEach(user => {%>
         <div class="comments-comment">
-          <a href="/username"><img src="" alt=""></a>
+          <a href="/username"><img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt=""></a>
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">
               <a href="/username">

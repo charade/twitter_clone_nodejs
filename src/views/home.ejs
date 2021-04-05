@@ -61,7 +61,7 @@
       <div class="comments">
         <% response.forEach(user => { %>
         <div class="comments-comment">
-          <a href="/username"><img src="" alt=""></a>
+          <a href="/username"><img src=<%=`data:image/jpg;base64,${user.avatar}`;%> alt='avatar'></a>
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">
               <a href="/username">

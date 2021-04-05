@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const {flash} = require("express-flash-message");
+const fileUpload = require('express-fileupload');
 
 
 app.use(session({
@@ -17,10 +18,11 @@ app.use(session({
 }));
 
 app.use(flash({ sessionKeyName: "flashMessage"}));
-
+app.use(cookieParser());
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-app.use(cookieParser());
+app.use(fileUpload())
+
 app.use(router);
 app.use(express.static('./src/images'));
 app.use(express.static('./src/css'));
