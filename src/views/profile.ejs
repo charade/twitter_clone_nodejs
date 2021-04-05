@@ -20,7 +20,7 @@
           <img src="/home-run.png" alt="">
           <h2>Home</h2>
         </a>
-        <a href="">
+        <a href="/explore">
           <img src="/hastag.png" alt="">
           <h2>Explore</h2>
         </a>
@@ -61,7 +61,7 @@
       
       <div class="comments">
         <% response.forEach(user => {%>
-        <div class="comments-comment">
+        <div class="comments-comment hover-active">
           <a href="/username"><img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt=""></a>
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">

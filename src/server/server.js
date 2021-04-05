@@ -32,7 +32,7 @@ app.engine("ejs", ejs.renderFile);
 app.set("views", "./src/views");
 
 //inscription d'un utilisateur
-app.get('/register');
+
 
 let port  = process.env.port || 2000 ;
 

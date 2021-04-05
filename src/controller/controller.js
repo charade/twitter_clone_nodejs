@@ -47,7 +47,7 @@ exports.newUser = async(req,res)=>{
                     if(err){
                         res.send(err.message);
                     }
-                    res.redirect('/signup');
+                    res.redirect('/');
                   })
             }
            
@@ -169,11 +169,11 @@ exports.allUserTweets = async (req, res , next) =>{
                 return;
             }
            if(response.length > 0){
-
+                console.log(typeof response[0].avatar)
                res.render("profile.ejs",{response} );
            } 
            else 
-               next();
+               next(); 
         })
     }
     catch (error) {

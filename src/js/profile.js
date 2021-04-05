@@ -14,12 +14,8 @@ edit_icons.forEach(icon => icon.addEventListener('click',(e)=>{
     inputs_text[edit_icons.indexOf(e.target)].value = tweet_text_content[edit_icons.indexOf(e.target)].textContent;
 }))
 
-
-
 forms.forEach(form => form.addEventListener('submit', (e)=>{
-    tweet_text_content.forEach((form) => form.style.backgroundColor ='red' )
-
-     tweet_text_content[forms.indexOf(e.target)].textContent = inputs_text[forms.indexOf(e.target)].value;
+    tweet_text_content[forms.indexOf(e.target)].textContent = inputs_text[forms.indexOf(e.target)].value;
     validate_buttons[forms.indexOf(e.target)].classList.remove('edit-active');
     console.log('coucou');
 }))

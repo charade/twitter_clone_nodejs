@@ -6,8 +6,17 @@ const path = require("path");
 
 const controller = require ('../controller/controller');
 
+//vérifie que l'utilisateur est bien logué
+function admin(req,res,next){
+    if(req.cookies.authentication){
+        next();
+    }
+    else{
+        res.redirect('/');
+    }
+}
 //user can create  tweet
-router.post('/tweet', controller.addTweet);
+router.post('/tweet',admin, controller.addTweet);
 
 ///login page est à la racine
 router.get('/',controller.logout, async (req,res)=>{
@@ -24,14 +33,18 @@ router.get('/signup',async(req,res)=>{
 // signup + authentification
 router.post('/register', controller.newUser);
 ///espace personnel
-router.get('/home', controller.displayTweets);
+router.get('/home',admin, controller.displayTweets);
 //////////////////////
 router.post('/edit_tweet/:id', controller.editTweet);
 ////////espace personnel avec tous les tweets de l'utilisateur///////////////
-router.get('/username', controller.allUserTweets, controller.noTweetsView);
+router.get('/username',admin, controller.allUserTweets, controller.noTweetsView);
 
 ///////////supprimer les tweets/////////////////
 router.get('/delete/:id', controller.deleteUserTweets);
+
+router.get('/explore',admin,(req,res)=>{
+    res.render('explore.ejs');
+})
 
 //le logout supprime le cookie d'authentification
 // router.get('/',  controller.logout, (req,res)=>{
