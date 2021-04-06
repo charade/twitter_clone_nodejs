@@ -41,7 +41,7 @@
 
     <div class="tweet-container">
       <div class="tweet-container-title">
-        <h3><%=response[0].pseudo%></h3>
+        <h3><%=token_payload.username%></h3>
       </div>
       
       <div class="tweet-container-profile">
@@ -49,12 +49,12 @@
           <img src="" alt="">
         </div>
         <div class="tweet-container-profile-picture">
-          <img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt="">
+          <img src=<%= avatar_to_render %> alt="">
         </div>
         <div class="tweet-container-profile-infos">
-          <h3><%=  response[0].pseudo %></h3>
-          <h4>@<%= response[0].pseudo %></h4>
-          <p><%= response[0].city%></p>
+          <h3> <%=  token_payload.username %></h3>
+          <h4>@<%= token_payload.username%> </h4>
+          <p>  <%= token_payload.username  %></p>
           
         </div>
       </div>
@@ -62,7 +62,7 @@
       <div class="comments">
         <% response.forEach(user => {%>
         <div class="comments-comment hover-active">
-          <a href="/username"><img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt=""></a>
+          <a href="/username"><img src=<%=avatar_to_render%> alt="avatar"></a>
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">
               <a href="/username">
@@ -110,7 +110,6 @@
             </div>
           </form>
 <!-- ---------------------------------------------------------------- -->
-
           </div>
         </div>
         <%})%>

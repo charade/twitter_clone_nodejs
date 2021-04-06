@@ -71,7 +71,7 @@ exports.userTweets = (user_id, callback) =>{
         callback(null,response);
     })
 }
-///////////////////effacer le tweet d'un utilisateur//////////////////////////
+///////////////////effacer le tweet d'un utilisateur//////////////////////////e
 exports.deleteTweet = (tweet_id, callback) =>{
     db.query(`DELETE FROM tweets WHERE id =  ${tweet_id};`
     ,(err,response) =>{

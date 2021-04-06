@@ -16,9 +16,11 @@
     <img class="home-image" src="/logoTwitter.png" alt="logoTwitter">
     <h1 class="home-title">Create your account</h1>
   </div>
-        <% err.forEach(err => {%>
-        <h3 class="home-error"><%= err %></h3>
-      <%})%>
+  
+  <%err.forEach((warning)=>{ %>
+          <h3 class="home-error"><%=warning%></h3>
+      <%});%>
+
   <form class="form" action="/register" method="post" encType = "multipart/form-data">
     <div class="form-input">
       <label for="first_name">First Name</label>
@@ -61,7 +63,7 @@
 
     <div class="form-input" >
       <label for="picture">Picture</label>
-      <input type="file" name="picture" id="picture">
+      <input type="file" name="picture" id="picture" accep='image/*'/>
     </div>
 
     <button type="submit">Submit</button>

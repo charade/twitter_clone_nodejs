@@ -1,10 +1,13 @@
 const model = require("../model/model");
-const cookie = require("cookie-parser");
 const jwt = require ("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const e = require("express");
 const { render } = require("ejs");
 const { request } = require("express");
+
+const {LocalStorage} = require("node-localstorage");
+const localStorage = new LocalStorage('../local_storage');
+const path = require('path');
 
 /////inscription
 exports.newUser = async(req,res)=>{
@@ -29,24 +32,32 @@ exports.newUser = async(req,res)=>{
         //stockage du token
         const cookie = res.cookie('authentication', token, {expires: new Date(Date.now()/1000 + 3600 )}) ;
         // requête ajout de l'utilisateur dans la database
-        const img = req.files.picture;
+       
+        const img = req.file ? req.files.picture : "";
+
         const img_base64_data = img.data.toString('base64');
 
         ////test si un utilisateur ale même pseudo///////////:
         model.userLogin(username,async (err,IsUserExiste)=>{
             if(err){
-                res.send(err);
+                console.log('line 46')
+                await req.flash('userExist', 'it seems an error occured');
+                res.redirect('/signup')
                 return;
             }
             if(IsUserExiste.length > 0){
+                console.log('line 52')
                 await req.flash('userExist', "username already exists");
-                res.redirect('/signup');
+                // res.redirect('/signup');
+                return;
             }
             else{
-                model.createUser(req.body, img_base64_data , (err,response)=>{
+                model.createUser(req.body, img_base64_data , async(err,response)=>{
                     if(err){
-                        res.send(err.message);
+                        console.log('line 59')
+                        await req.flash('userExist', 'it seems an error occured');
                     }
+                    console.log('line 62');
                     res.redirect('/');
                   })
             }
@@ -54,22 +65,21 @@ exports.newUser = async(req,res)=>{
           })
     }
     catch(err){
-        console.log(err.message);
+        res.redirect('/signup');
     }
 }
-    
        
-
-
 ///checkpoint à la login page
 exports.login = (req, res, next) => {
     const {username, password} = req.body;
     
     // reponse de la requête
-    model.userLogin (username, async (error, response)=>{
+    model.userLogin(username, async (error, response)=>{
         
         if(error) {
-            res.send(error.message);
+            await req.flash('warning', 'it seems an error occured');
+            res.redirect('/');
+            return;
         } 
         if(response.length ===0) {
             await req.flash("warning", "This user doesn't exist!");
@@ -86,36 +96,17 @@ exports.login = (req, res, next) => {
             } 
     })
 }
-
-//ajout de tweet par l'utilisateur connecté
-exports.addTweet = async (req, res) =>{
-    const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
-    // const base64_payload = cookieValue.split('.')[1];
-    // const loading_payload = Buffer(base64_payload,'base64');
-    // const decoded =  loading_payload.toString('ascii');
-    // const USER_ID = JSON.parse(decoded).USER_ID;
-    const user_id = await jwt.verify(cookieValue, "azerty").USER_ID;
-    const tweet_message = req.body.message;
-    model.createTweet(user_id, tweet_message, (err,response)=>{
-        if(err){
-            res.send(err.message);
-        }
-        
-        res.redirect('/home');
-    })
-}
-
 // middleware to authenticate user when browsing
-exports.authentication= (req,res,next)=>{
+exports.authentication= async(req,res,next)=>{
     
     //date d'expiration du cookie 
     const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
     const{username} = req.body;
 
-    model.userLogin(username,(err,ID)=>{
+    model.userLogin(username,async(err,ID)=>{
 
         if(err){
-            res.send(err.message);
+            await req.flash('warning', 'athentication error');
         } 
 
         const user = {
@@ -129,30 +120,48 @@ exports.authentication= (req,res,next)=>{
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
         res.cookie("authentication", token, {expires: EXPIRATION_DATE});
-        res.redirect("/home")
+        //Sauvegarde l'image dans un local storage
+        if(ID[0].avatar){
+            localStorage.setItem('avatar', ID[0].avatar);
+        }
+        else{
+            
+            localStorage.setItem('avatar', "");
+        }
         
-        
+        res.redirect("/home");
     })
 }
-
-
-//deconnexion
-exports.logout = (req,res, next)=>{
-    // const token = req.cookies.authentication;
-    // res.cookie('authentication',token,{expires : new Date(Date.now() - 84000)});
-    res.clearCookie('authentication',{path:'/'},{domain:"localhost"});
-    next();
-}
-
-///////////////////20 derniers tweets ////////////////////////////////////////////////////////
+////affiche les 20 derniers tweets sur la home page
 exports.displayTweets = (req, res) =>{
-    model.tweetDisplay((err, response) => {
+    model.tweetDisplay((err, response) => {               
         if(err){
-            console.log("erro404");
+            res.redirect('/');
+            return;
         }
         res.render('home.ejs',{response}); 
     })
 }
+
+//ajout de tweet par l'utilisateur connecté depuis la home page
+exports.addTweet = async (req, res) =>{
+    const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
+    // const base64_payload = cookieValue.split('.')[1];
+    // const loading_payload = Buffer(base64_payload,'base64');
+    // const decoded =  loading_payload.toString('ascii');
+    // const USER_ID = JSON.parse(decoded).USER_ID;
+    const user_id = await jwt.verify(cookieValue, "azerty").USER_ID;
+    const tweet_message = req.body.message;
+    model.createTweet(user_id, tweet_message, (err,response)=>{
+        if(err){
+            console.log(err);
+        }
+        res.redirect('/home');
+    })
+}
+
+
+///////////////////20 derniers tweets ////////////////////////////////////////////////////////
 
 //affiche tous les tweets de l'utilisateur connecté sur la page de son profil
 exports.allUserTweets = async (req, res , next) =>{
@@ -160,24 +169,23 @@ exports.allUserTweets = async (req, res , next) =>{
     
     try{
         const SECRET_KEY = "azerty"
-        const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
-        const userId = isAuthentic.USER_ID;
+        const token_payload = await jwt.verify(token, SECRET_KEY) ;
+        const userId = token_payload.USER_ID;
         //reponse de la requete....
         model.userTweets(userId, (err,response) => {
             if(err){
-                console.log("quelques chose");
+                res.redirect('/home');
                 return;
             }
-           if(response.length > 0){
-                console.log(typeof response[0].avatar)
-               res.render("profile.ejs",{response} );
-           } 
-           else 
-               next(); 
+          ///////////////////////////////
+            const stored_avatar = localStorage.getItem('avatar');
+            const avatar_to_render  =  stored_avatar != ""? `data:image/jpg;base64,${stored_avatar}` : "default_avatar.png";//////
+            res.render("profile.ejs",{response, token_payload, avatar_to_render} );
         })
     }
     catch (error) {
-        res.send("veuilez vous connecter");
+        res.redirect('/');
+        await req.flash('warning', 'veuillez vous reconnecter');
     }
 }
 
@@ -187,27 +195,27 @@ exports.deleteUserTweets =  (req, res) =>{
 
     model.deleteTweet( id, (err, resp)=>{
         if(err){
-            res.send(err.message);
+            console.log("can't delete");
         }
         res.redirect("/username");
     })
 }
 
 ///si on supprime tous les tweets de l'utilisteur on veut qu'il puisse quand même voir la page de son profil
-exports.noTweetsView = async (req, res) => {
-    const token = req.cookies.authentication; //coresponding to token saved on login or signup
-    try{
-        const SECRET_KEY = "azerty"
-        const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
-        res.render("profileNoTweetView.ejs", {isAuthentic} )
+// exports.noTweetsView = async (req, res) => {
+//     const token = req.cookies.authentication; //coresponding to token saved on login or signup
+//     try{
+//         const SECRET_KEY = "azerty"
+//         const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
+//         res.render("profileNoTweetView.ejs", {isAuthentic} )
         
-        }
-    catch (error){
-        res.send("nous rencontrons quelques difficultés")
-    }
-}
+//         }
+//     catch (error){
+//         res.send("nous rencontrons quelques difficultés")
+//     }
+// }
 
-
+////permet de modifier le tweet d'un user connecté
 exports.editTweet  = async(req,res)=>{
 
     const token  = req.cookies.authentication;
@@ -219,17 +227,20 @@ exports.editTweet  = async(req,res)=>{
     console.log(id)
     model.editTweet(id,new_text_content,(err,response)=>{
         if(err){
-            res.send(err.message);
+            console.log(err);
         }
         res.redirect('/username');
     })
 }
 
+//deconnexion
+exports.logout = (req,res, next)=>{
+    res.clearCookie('authentication',{path:'/'},{domain:"localhost"});
+    next();
+}
 
 
 // exports.regenerateCookie = (req, res, next) =>{
-  
-
 //     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
 //     const base64_payload = cookieValue.split('.')[1];
 //     const loading_payload = Buffer(base64_payload,'base64');
