@@ -29,17 +29,37 @@ exports.newUser = async(req,res)=>{
         //stockage du token
         const cookie = res.cookie('authentication', token, {expires: new Date(Date.now()/1000 + 3600 )}) ;
         // requête ajout de l'utilisateur dans la database
-        model.createUser(req.body, req.file.picture, (err,response)=>{
+        const img = req.files.picture;
+        const img_base64_data = img.data.toString('base64');
+
+        ////test si un utilisateur ale même pseudo///////////:
+        model.userLogin(username,async (err,IsUserExiste)=>{
             if(err){
-                res.send(err.message);
+                res.send(err);
+                return;
             }
-            res.redirect('/');
-        })
-      }
+            if(IsUserExiste.length > 0){
+                await req.flash('userExist', "username already exists");
+                res.redirect('/signup');
+            }
+            else{
+                model.createUser(req.body, img_base64_data , (err,response)=>{
+                    if(err){
+                        res.send(err.message);
+                    }
+                    res.redirect('/');
+                  })
+            }
+           
+          })
+    }
     catch(err){
         console.log(err.message);
     }
 }
+    
+       
+
 
 ///checkpoint à la login page
 exports.login = (req, res, next) => {
@@ -60,6 +80,7 @@ exports.login = (req, res, next) => {
                 next();
                 return;
             } 
+            
             await req.flash("warning", "Invalid Password")
             res.redirect("/");
             } 
@@ -69,12 +90,13 @@ exports.login = (req, res, next) => {
 //ajout de tweet par l'utilisateur connecté
 exports.addTweet = async (req, res) =>{
     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
-    const base64_payload = cookieValue.split('.')[1];
-    const loading_payload = Buffer(base64_payload,'base64');
-    const decoded =  loading_payload.toString('ascii');
-    const USER_ID = JSON.parse(decoded).USER_ID;
+    // const base64_payload = cookieValue.split('.')[1];
+    // const loading_payload = Buffer(base64_payload,'base64');
+    // const decoded =  loading_payload.toString('ascii');
+    // const USER_ID = JSON.parse(decoded).USER_ID;
+    const user_id = await jwt.verify(cookieValue, "azerty").USER_ID;
     const tweet_message = req.body.message;
-    model.createTweet(USER_ID, tweet_message, (err,response)=>{
+    model.createTweet(user_id, tweet_message, (err,response)=>{
         if(err){
             res.send(err.message);
         }
@@ -89,6 +111,7 @@ exports.authentication= (req,res,next)=>{
     //date d'expiration du cookie 
     const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
     const{username} = req.body;
+
     model.userLogin(username,(err,ID)=>{
 
         if(err){
@@ -96,13 +119,12 @@ exports.authentication= (req,res,next)=>{
         } 
 
         const user = {
-            username : ID[0].username,
+            username : username,
             USER_ID : ID[0].id,
             expiration: EXPIRATION_DATE,
             city: ID[0].city,
-            // avatar: ID[0].avatar
         }
-        
+        console.log(user);
         const SECRET_KEY = "azerty"
         const token = jwt.sign(user, SECRET_KEY);
         //stockage du token
@@ -122,7 +144,7 @@ exports.logout = (req,res, next)=>{
     next();
 }
 
-//20 derniers tweets 
+///////////////////20 derniers tweets ////////////////////////////////////////////////////////
 exports.displayTweets = (req, res) =>{
     model.tweetDisplay((err, response) => {
         if(err){
@@ -140,19 +162,18 @@ exports.allUserTweets = async (req, res , next) =>{
         const SECRET_KEY = "azerty"
         const isAuthentic = await jwt.verify(token, SECRET_KEY) ;
         const userId = isAuthentic.USER_ID;
-        console.log(isAuthentic);
         //reponse de la requete....
         model.userTweets(userId, (err,response) => {
             if(err){
                 console.log("quelques chose");
+                return;
             }
            if(response.length > 0){
-
+                console.log(typeof response[0].avatar)
                res.render("profile.ejs",{response} );
-               console.log(response);
            } 
            else 
-               next();
+               next(); 
         })
     }
     catch (error) {
@@ -187,11 +208,15 @@ exports.noTweetsView = async (req, res) => {
 }
 
 
-exports.editTweet  = (req,res)=>{
+exports.editTweet  = async(req,res)=>{
 
+    const token  = req.cookies.authentication;
+    const userId = await jwt.verify(token,"azerty").USER_ID;
     const id = req.params.id;
+    console.log('user_id : ' + userId, 'tweet_id : ' + id);
+    
     const {new_text_content} = req.body;
-
+    console.log(id)
     model.editTweet(id,new_text_content,(err,response)=>{
         if(err){
             res.send(err.message);
@@ -199,6 +224,7 @@ exports.editTweet  = (req,res)=>{
         res.redirect('/username');
     })
 }
+
 
 
 // exports.regenerateCookie = (req, res, next) =>{
@@ -217,4 +243,3 @@ exports.editTweet  = (req,res)=>{
 //     }
 //     next();
 // }
-

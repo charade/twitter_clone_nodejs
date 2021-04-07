@@ -10,7 +10,7 @@ function queryResponse (callback, err, status_ok) {
 
 
 exports.createUser = (user, picture, callback)=>{
-    db.query(`INSERT INTO users(lastname, firstname, dateofbirth, email, hash, phonenumber, pseudo, city) VALUES ("${user.last_name}", "${user.first_name}", "${user.birthday}", "${user.email}", "${user.password}", "${user.telephone}", "${user.username}", "${user.city}");`,
+    db.query(`INSERT INTO users(lastname, firstname, dateofbirth, email, hash, phonenumber, pseudo, city, avatar) VALUES ("${user.last_name}", "${user.first_name}", "${user.birthday}", "${user.email}", "${user.password}", "${user.telephone}", "${user.username}", "${user.city}", "${picture}");`,
      (err, status_ok)=>{
             if(err){
                 callback(err,null);
@@ -21,7 +21,7 @@ exports.createUser = (user, picture, callback)=>{
 }
 
 exports.userLogin = (username, callback) => {
-    db.query(`SELECT id, hash, city, avatar FROM users WHERE pseudo="${username}";`, 
+    db.query(`SELECT * FROM users WHERE pseudo="${username}";`, 
         (err, status_ok)=>{
             if(err){
                 callback(err,null);
@@ -31,6 +31,13 @@ exports.userLogin = (username, callback) => {
             
         });
 }
+
+// exports.getUserID = (username, callback) =>{
+//     db.query(`SELECT id, city FROM users WHERE pseudo = "${username}";`,(err,response)=>{
+//         if(err) return callback(err,null);
+//         callback(null,response);
+//     }) 
+// }
 
 exports.createTweet = (id,text,callback) =>{
     db.query(`INSERT INTO tweets(author_id, text) VALUES(${id},"${text}");`,(err,response)=>{
@@ -43,7 +50,7 @@ exports.createTweet = (id,text,callback) =>{
 
 
 exports.tweetDisplay = (callback) =>{
-    db.query(`select users.pseudo,tweets.text,tweets.creation_date from tweets inner join users on tweets.author_id = users.id   ORDER BY tweets.id DESC LIMIT 20;`
+    db.query(`select * from tweets inner join users on tweets.author_id = users.id   ORDER BY tweets.id DESC LIMIT 20;`
      , (err,response) =>{
         if (err) {
             callback(err, null);
@@ -55,7 +62,7 @@ exports.tweetDisplay = (callback) =>{
 }
 
 exports.userTweets = (user_id, callback) =>{
-    db.query(`SELECT users.pseudo, users.city, tweets.text, tweets.creation_date, tweets.id FROM tweets INNER JOIN users ON tweets.author_id = users.id WHERE author_id = ${user_id};`
+    db.query(`SELECT tweets.id, users.avatar, tweets.text, users.pseudo,  tweets.creation_date, users.city  FROM tweets INNER JOIN users ON tweets.author_id = users.id WHERE users.id = ${user_id};`
      , (err,response) =>{
         if (err) {
             callback(err, null);
@@ -77,8 +84,11 @@ exports.deleteTweet = (tweet_id, callback) =>{
 }
 
 ///editing tweet query
-exports.editTweet = (id,new_text,callback)=>{
-    db.query(`UPDATE tweets SET text = "${new_text}" where id = ${id};`,(err,resp)=>{
+exports.editTweet = async (id,new_text,callback)=>{
+
+    
+
+    db.query(`UPDATE tweets SET text = "${new_text}" where tweets.id = ${id};`,(err,resp)=>{
 
         if(err){
             callback(err,null);

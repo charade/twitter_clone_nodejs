@@ -17,7 +17,7 @@
       <img class="tweet-navigation-image" src="/logoTwitter.png" alt="">
       <div class="tweet-navigation-link">
         <a href="/home">
-          <img src="/home-run.png" alt="">
+          <img src="/home-run.png" alt="" api-key="eb8f28bb793e438db66ba192689a7dba" />
           <h2>Home</h2>
         </a>
         <a href="/explore">
@@ -42,9 +42,9 @@
 
     <div class="tweet-container">
       <div class="tweet-container-title">
-        <h3>Home</h3>
+        <h3>Explore</h3>
       </div>
-      <form action="/tweet" method="post" class="tweet-container-form">
+      <!-- <form action="/tweet" method="post" class="tweet-container-form">
         <div class="tweet-container-message">
           <label for="message"></label>
           <div class="tweet-container-text">
@@ -56,36 +56,52 @@
           <button type="submit" class="tweet-button">Tweet</button>
         </div>
 
-      </form>
-      <% function avatar_picker(user){                    %>
-      <%  if(user.avatar === null){                       %>
-      <%       return "default_avatar.png";               %>
-      <%      }                                           %>
-      <%   return `data:image/jpg;base64,${user.avatar}`  %>
-      <%}                                                 %>
-      <div class="comments">
-        <% response.forEach(user => { %>
-          
-        <div class="comments-comment hover-active">
-          <a href="/username"><img src=<%= avatar_picker(user) %> alt='avatar'></a>
+      </form> -->
+
+      <div class="comments" >
+       
+        <div class="comments-comment">
+          <a href="/username"> </a>
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">
               <a href="/username">
-                <h3 class="comments-comment-content-username"><%=user.pseudo%> </h3>
+                <h3 class="comments-comment-content-username"></h3>
               </a>
               
-              <span class="comments-comment-content-date"><%=user.creation_date%></span>
+              <span class="comments-comment-content-date"></span>
             </div>
-            <p class="comments-comment-content-text"><%=user.text%></p>
+            <p class="comments-comment-content-text"> </p>
           </div>
         </div>
-      <%})%>
       </div>
 
-    </div>
+      <a href="" alt='content-image' class='article-link'>
+          <figure class="comments news-content-premiere article-container" >
+            <img src="" alt="" id='img-premiere' class='article-image'>
+            <figcaption class='content-premiere'><h2 class='premiere-title-container article-title-container'></h2></figcaption> 
+          </figure>
+      </a>
+
+      <% for(let i = 0; i< 19; i++){%>
+
+      <a href="" class='article-link'>
+          <figure class="comments article-container hover-active" >
+             <img class = 'article-image'src="" alt="" />
+             <figcaption class='article-news-container'>
+               <span class='publishing-date'></span>
+                <h2 class='article-title-container'></h2>
+                <p class='article-content'>
+                </p>
+                <span class='author-container'></span>
+              </figcaption> 
+          </figure>
+      </a>
+    <%}%>
+
+  </div>
 
     <div class="tweet-search"></div>
-
+    <script src='explore.js'></script> 
   </section>
 </body>
 

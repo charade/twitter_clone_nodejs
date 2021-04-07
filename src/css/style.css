@@ -72,6 +72,7 @@
   width: 50vw;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   border-right: 1px solid gray;
   border-left: 1px solid gray;
 }
@@ -89,10 +90,12 @@
           align-items: center;
   z-index: 99;
   padding-left: 1.5%;
-  width: 46vw;
-  height: 10vh;
+  width: 46.5%;
+  color: white;
+  height: 13vh;
   position: fixed;
   border-bottom: 1px solid gray;
+  background-color: rgba(0, 0, 0, 0.719);
 }
 
 .tweet-container-form {
@@ -475,5 +478,133 @@ body {
 
 .text-edit-active {
   display: block;
+}
+
+.article-container {
+  padding: 1%;
+}
+
+figure.news-content-premiere {
+  min-height: 53vh;
+  min-width: 100%;
+  padding: 0;
+  position: relative;
+}
+
+figure.news-content-premiere #img-premiere {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+figure.news-content-premiere .content-premiere {
+  position: absolute;
+  bottom: 0%;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: rgba(0, 0, 0, 0.808);
+  height: 30%;
+}
+
+figure.news-content-premiere .content-premiere h2 {
+  font-size: 1rem;
+  color: white;
+}
+
+.article-container {
+  height: 20vh;
+  min-width: 100%;
+  margin: 0 0 0 0;
+  border: 0.01px solid rgba(0, 0, 0, 0.322);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.article-container img {
+  width: 35%;
+  height: 60%;
+  border-radius: 4px;
+  border: none;
+}
+
+.article-container figcaption {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.article-container figcaption > *:nth-child(n) {
+  margin: 0;
+}
+
+.article-container span {
+  width: 100%;
+  color: black;
+  font-size: .7rem;
+  font-weight: 600;
+  padding-left: 68%;
+}
+
+.article-container h2 {
+  width: 90%;
+  text-align: center;
+  height: 42%;
+  font-size: .8rem;
+  word-wrap: break-word;
+  border: thin solid rgba(0, 0, 0, 0.63);
+  border-radius: 4px;
+  padding-top: 4%;
+}
+
+.article-container p {
+  width: 100%;
+  font-size: 0.5rem;
+  color: black;
+}
+
+.article-container p + span {
+  width: 100%;
+  font-size: .5rem;
+  text-align: center;
+  color: black;
+}
+
+a {
+  text-decoration: none;
+}
+
+h2.article-title-container {
+  color: black;
+}
+
+.hover-active {
+  -webkit-transition: 0.7s;
+  transition: 0.7s;
+}
+
+.hover-active:hover {
+  background: rgba(0, 0, 0, 0.055);
 }
 /*# sourceMappingURL=style.css.map */

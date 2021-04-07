@@ -20,7 +20,7 @@
           <img src="/home-run.png" alt="">
           <h2>Home</h2>
         </a>
-        <a href="">
+        <a href="/explore">
           <img src="/hastag.png" alt="">
           <h2>Explore</h2>
         </a>
@@ -49,7 +49,7 @@
           <img src="" alt="">
         </div>
         <div class="tweet-container-profile-picture">
-          <img src="" alt="">
+          <img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt="">
         </div>
         <div class="tweet-container-profile-infos">
           <h3><%=  response[0].pseudo %></h3>
@@ -61,8 +61,8 @@
       
       <div class="comments">
         <% response.forEach(user => {%>
-        <div class="comments-comment">
-          <a href="/username"><img src="" alt=""></a>
+        <div class="comments-comment hover-active">
+          <a href="/username"><img src=<%= `data:image/jpg;base64,${response[0].avatar}`%> alt=""></a>
           <div class="comments-comment-content">
             <div class="comments-comment-content-nameDate">
               <a href="/username">
@@ -72,10 +72,10 @@
             </div>
 
   <!-- ---------------------------------------------------------------- -->
-            <form action=<%=`/edit_tweet/${user.id}`%> method='POST'>
+          <form action=<%=`/edit_tweet/${user.id}`%> method='POST'>
               <p class = 'display-tweet-content'><%=`${user.text}`%></p>
 
-            <input class="text-field-edit" name='new_text_content' type='text'>
+            <input class="text-field-edit" name='new_text_content' type='text' value='hello'>
 
             <div class='modification-icons-block'>
                 <!-- edit tweet icon -->
