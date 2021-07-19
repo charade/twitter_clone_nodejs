@@ -6,17 +6,15 @@ const e = require("express");
 const { render } = require("ejs");
 const { request } = require("express");
 
-/////inscription
+//log in
 exports.newUser = async(req,res)=>{
 
     const{last_name, first_name, birthday, email, password, telephone, username, city} = req.body;
 
     try{
-        ///hashage renouveller chaque fois pour le même mot de pass
         const hash = await bcrypt.hash(password,10);
         //on change la valuer du mot de pass par le hash
         req.body.password = await hash;
-
         //payload token
         const user = {
             user_lastname : last_name,
@@ -31,8 +29,7 @@ exports.newUser = async(req,res)=>{
         // requête ajout de l'utilisateur dans la database
         const img = req.files.picture;
         const img_base64_data = img.data.toString('base64');
-
-        ////test si un utilisateur ale même pseudo///////////:
+        // check if username already exists:
         model.userLogin(username,async (err,IsUserExiste)=>{
             if(err){
                 res.send(err);
@@ -50,21 +47,15 @@ exports.newUser = async(req,res)=>{
                     res.redirect('/');
                   })
             }
-           
           })
     }
     catch(err){
         console.log(err.message);
     }
 }
-    
-       
-
-
 ///checkpoint à la login page
 exports.login = (req, res, next) => {
     const {username, password} = req.body;
-    
     // reponse de la requête
     model.userLogin (username, async (error, response)=>{
         
@@ -86,7 +77,6 @@ exports.login = (req, res, next) => {
             } 
     })
 }
-
 //ajout de tweet par l'utilisateur connecté
 exports.addTweet = async (req, res) =>{
     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
@@ -100,15 +90,13 @@ exports.addTweet = async (req, res) =>{
         if(err){
             res.send(err.message);
         }
-        
         res.redirect('/home');
     })
 }
 
 // middleware to authenticate user when browsing
 exports.authentication= (req,res,next)=>{
-    
-    //date d'expiration du cookie 
+    //cookie exp date 
     const EXPIRATION_DATE = new Date(Date.now() + 60 * 60 * 1000);
     const{username} = req.body;
 
@@ -117,7 +105,6 @@ exports.authentication= (req,res,next)=>{
         if(err){
             res.send(err.message);
         } 
-
         const user = {
             username : username,
             USER_ID : ID[0].id,
@@ -130,21 +117,16 @@ exports.authentication= (req,res,next)=>{
         //stockage du token
         res.cookie("authentication", token, {expires: EXPIRATION_DATE});
         res.redirect("/home")
-        
-        
     })
 }
 
-
-//deconnexion
+//log out
 exports.logout = (req,res, next)=>{
-    // const token = req.cookies.authentication;
-    // res.cookie('authentication',token,{expires : new Date(Date.now() - 84000)});
     res.clearCookie('authentication',{path:'/'},{domain:"localhost"});
     next();
 }
 
-///////////////////20 derniers tweets ////////////////////////////////////////////////////////
+///////////////////last 20 tweets ////////////////////////////////////////////////////////
 exports.displayTweets = (req, res) =>{
     model.tweetDisplay((err, response) => {
         if(err){
@@ -154,7 +136,7 @@ exports.displayTweets = (req, res) =>{
     })
 }
 
-//affiche tous les tweets de l'utilisateur connecté sur la page de son profil
+//posting every connected user tweets
 exports.allUserTweets = async (req, res , next) =>{
     const token = req.cookies.authentication; //coresponding to token saved on login or signup
     
@@ -181,7 +163,7 @@ exports.allUserTweets = async (req, res , next) =>{
     }
 }
 
-//supprime le tweet d'un utilisateur connecté
+//delete connected user tweets
 exports.deleteUserTweets =  (req, res) =>{
     const id = req.params.id;
 
@@ -207,7 +189,6 @@ exports.noTweetsView = async (req, res) => {
     }
 }
 
-
 exports.editTweet  = async(req,res)=>{
 
     const token  = req.cookies.authentication;
@@ -224,22 +205,3 @@ exports.editTweet  = async(req,res)=>{
         res.redirect('/username');
     })
 }
-
-
-
-// exports.regenerateCookie = (req, res, next) =>{
-  
-
-//     const cookieValue   = req.cookies.authentication;//coresponding to token saved on login or signup
-//     const base64_payload = cookieValue.split('.')[1];
-//     const loading_payload = Buffer(base64_payload,'base64');
-//     const decoded =  loading_payload.toString('ascii');
-//     const expirationDateCookie = JSON.parse(decoded).expiration;
-
-//     if (Date.now() - expirationDateCookie < 30000){
-
-//         const token = cookieValue;
-//         res.cookie("authentication", token, {expires:expirationDateCookie})
-//     }
-//     next();
-// }
