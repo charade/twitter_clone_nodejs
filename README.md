@@ -1,5 +1,5 @@
 ## Tweeter_Clone_NodeJs
-C'est un projet d'équipe dans le cadre de formation à Simplon.co. Développement d'un clone simplifié de Twitter en Node.js avec une base de données en MySQL qui stocke les données, le tout en respectant l'architecture MVC et incluant l'authentification en JWT.
+Clone simplifié de Twitter en Node.js avec une base de données en MySQL qui stocke les données, le tout en respectant l'architecture MVC et incluant l'authentification en JWT.
 
 ### User Story
 
